@@ -10,3 +10,10 @@ wordpress.${DOMAIN_NAME} {
         header_up X-Forwarded-Proto https
 	}
 }
+
+phpmyadmin.${DOMAIN_NAME} {
+	reverse_proxy * phpmyadmin:80 {
+		header_up X-Forwarded-Port 443
+		header_up X-Forwarded-Proto https
+	}
+}
