@@ -1,0 +1,13 @@
+- name: Prepare docker on the server
+  hosts: all
+  remote_user: root
+  tags: docker
+  roles:
+    - docker
+
+- name: Deploy the app using compose
+  hosts: all
+  remote_user: root
+  tags: app
+  roles:
+    - app
