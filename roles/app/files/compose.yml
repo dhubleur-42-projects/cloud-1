@@ -1,0 +1,59 @@
+version: '3.1'
+
+services:
+
+  wordpress:
+    image: wordpress
+    restart: always
+    environment:
+      DB_HOST: mariadb
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_NAME: ${DB_NAME}
+    volumes:
+      - wordpress:/var/www/html
+    networks:
+      - caddy
+      - backend
+    
+
+  mariadb:
+    image: mariadb
+    restart: always
+    environment:
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_RANDOM_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+    volumes:
+      - db:/var/lib/mysql
+    networks:
+      - backend
+
+
+  caddy:
+    container_name: caddy
+    image: iarekylew00t/caddy-cloudflare:latest
+    ports:
+        - 80:80
+        - 443:443
+    environment:
+        - DOMAIN_NAME=${DOMAIN_NAME}
+        - CLOUDFLARE_KEY=${CLOUDFLARE_KEY}
+    volumes:
+        - caddy:/data
+    restart: always
+    networks:
+        - caddy
+
+
+volumes:
+  wordpress:
+  db:
+  caddy:
+
+networks:
+  caddy:
+    driver: bridge
+  backend:
+    driver: bridge
