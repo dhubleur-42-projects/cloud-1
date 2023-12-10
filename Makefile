@@ -17,3 +17,6 @@ clean:
 
 stop:
 	$(PLAYBOOK_BASE_COMMAND) --tags stop
+
+re: clean
+	make up

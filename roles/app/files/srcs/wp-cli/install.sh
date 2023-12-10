@@ -12,7 +12,7 @@ if  [ ! -f "$PROTECT_FILE" ]; then
 						--allow-root --skip-check
 
 	/usr/local/bin/wp core install	--path=/var/www/html \
-									--url="wordpress.$DOMAIN_NAME" \
+									--url="https://wordpress.$DOMAIN_NAME" \
 									--title="Pouet Site" \
 									--admin_user="$WP_ADMIN_USER" \
 									--admin_password="$WP_ADMIN_PASSWORD" \
