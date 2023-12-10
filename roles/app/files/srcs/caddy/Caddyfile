@@ -4,14 +4,18 @@
 	}
 }
 
+http://wordpress.${DOMAIN_NAME} {
+	redirect https://wordpress.${DOMAIN_NAME}{uri} permanent
+}
+
 wordpress.${DOMAIN_NAME} {
 	reverse_proxy wordpress:80 {
-		header_up Host {host}
-		header_up X-Real-IP {remote}
-		header_up X-Forwarded-For {remote}
-		header_up X-Forwarded-Port {server_port}
 		header_up X-Forwarded-Proto {scheme}
 	}
+}
+
+http://phpmyadmin.${DOMAIN_NAME} {
+	redirect https://phpmyadmin.${DOMAIN_NAME}{uri} permanent
 }
 
 phpmyadmin.${DOMAIN_NAME} {
