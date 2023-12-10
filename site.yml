@@ -11,3 +11,25 @@
   tags: app
   roles:
     - app
+
+- name: Reset the server
+  hosts: all
+  remote_user: root
+  tags: reset
+  roles:
+    - reset
+
+- name: Clean the server
+  hosts: all
+  remote_user: root
+  tags: clean
+  roles:
+    - clean
+
+- name: Stop the app
+  hosts: all
+  remote_user: root
+  tags: stop
+  tasks:
+    - name: Stop the app
+      shell: docker compose -f /app/compose.yml --env-file /app/.env down

@@ -5,9 +5,7 @@
 }
 
 wordpress.${DOMAIN_NAME} {
-	root * /var/www/html
-	php_fastcgi wordpress:9000
-	file_server
+	reverse_proxy wordpress:80
 }
 
 phpmyadmin.${DOMAIN_NAME} {

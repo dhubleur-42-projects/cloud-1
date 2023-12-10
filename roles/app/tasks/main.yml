@@ -26,18 +26,6 @@
 - name: Stop the compose app
   shell: docker compose -f /app/compose.yml --env-file /app/.env down
 
-# usage: -e "reset=true"
-- name: Reset the compose app if asked
-  tags: reset
-  block:
-    - name: clean all volumes
-      when: reset
-      shell: docker volume prune --force
-
-    - name: clean all images
-      when: reset
-      shell: docker image prune --force
-
 - name: Run the compose app
   shell: docker compose -f /app/compose.yml --env-file /app/.env up -d --build
 

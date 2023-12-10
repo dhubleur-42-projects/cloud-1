@@ -1,0 +1,5 @@
+- name: Stop the compose app
+  shell: docker compose -f /app/compose.yml --env-file /app/.env down
+
+- name: Remove all docker volumes
+  shell: docker volume rm $(docker volume ls -q)

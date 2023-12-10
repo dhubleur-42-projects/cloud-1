@@ -5,18 +5,12 @@ services:
   wordpress:
     container_name: wordpress
     image: wordpress
-    build:
-      context: ./srcs/wordpress
     restart: always
     environment:
-      DB_HOST: mariadb
-      DB_USER: ${DB_USER}
-      DB_PASSWORD: ${DB_PASSWORD}
-      DB_NAME: ${DB_NAME}
-      DOMAIN_NAME: ${DOMAIN_NAME}
-      WP_ADMIN_USER: ${WP_ADMIN_USER}
-      WP_ADMIN_PASSWORD: ${WP_ADMIN_PASSWORD}
-      WP_ADMIN_EMAIL: ${WP_ADMIN_EMAIL}
+      WORDPRESS_DB_HOST: mariadb
+      WORDPRESS_DB_USER: ${DB_USER}
+      WORDPRESS_DB_PASSWORD: ${DB_PASSWORD}
+      WORDPRESS_DB_NAME: ${DB_NAME}
     volumes:
       - wordpress:/var/www/html
     networks:
@@ -68,7 +62,11 @@ services:
       - 443:443
     volumes:
       - caddy:/data
-      - wordpress:/var/www/html
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - TZ='Europe/Paris'
+      - CADDY_INGRESS_NETWORKS=caddy
+      - CADDY_DOCKER_CADDYFILE_PATH=/etc/caddy/Caddyfile
     restart: always
     networks:
       - caddy

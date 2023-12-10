@@ -1,13 +1,13 @@
 FROM caddy:2.7.5-builder AS builder
 
 RUN xcaddy build \
-	--with github.com/caddy-dns/cloudflare
+	--with github.com/caddy-dns/cloudflare \
+	--with github.com/lucaslorentz/caddy-docker-proxy/v2
 
 FROM caddy:2.7.5-alpine
 
 COPY --from=builder /usr/bin/caddy /usr/bin/caddy
 
-RUN mkdir -p /etc/caddy
 COPY ./Caddyfile /etc/caddy/Caddyfile
 
 ARG DOMAIN_NAME
@@ -18,4 +18,4 @@ RUN sed -i "s/\${CLOUDFLARE_KEY}/${CLOUDFLARE_KEY}/g" /etc/caddy/Caddyfile
 
 EXPOSE 80 443
 
-CMD ["caddy", "run", "--config", "/etc/caddy/Caddyfile", "--adapter", "caddyfile"]
+CMD [ "caddy", "docker-proxy" ]

@@ -30,7 +30,7 @@
     dest: "/tmp/add_docker_repo.sh"
     mode: 0755
 
-- name: Add docker repo key (run add_docker_repo.sh)
+- name: Add docker repo key
   become: yes
   become_user: root
   shell: /tmp/add_docker_repo.sh

@@ -1,0 +1,24 @@
+- name: Stop the compose app
+  shell: docker compose -f /app/compose.yml --env-file /app/.env down
+
+- name: Remove all docker volumes
+  shell: docker volume rm $(docker volume ls -q)
+
+- name: Remove all docker networks
+  shell: docker network rm $(docker network ls -q)
+
+- name: Remove all docker images
+  shell: docker rmi $(docker images -q)
+
+- name: Uninstall docker
+  become: yes
+  become_user: root
+  apt:
+    name:
+      - docker
+      - docker-engine
+      - docker.io
+      - containerd
+      - runc
+    state: absent
+    update_cache: yes
