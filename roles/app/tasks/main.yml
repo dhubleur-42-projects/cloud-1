@@ -1,0 +1,50 @@
+- name: Delete the compose app directory
+  become: yes
+  become_user: root
+  file:
+    path: /app
+    state: absent
+
+- name: Create directory for compose app
+  become: yes
+  become_user: root
+  file:
+    path: /app
+    owner: root
+    state: directory
+  
+- name: Copy files to the compose app directory
+  become: yes
+  become_user: root
+  copy:
+    src: "{{ role_path }}/files/"
+    dest: /app
+    owner: root
+    mode: 0755
+    force: yes
+
+- name: Stop the compose app
+  shell: docker compose -f /app/compose.yml --env-file /app/.env down
+
+# usage: -e "reset=true"
+- name: Reset the compose app if asked
+  tags: reset
+  block:
+    - name: clean all volumes
+      when: reset
+      shell: docker volume prune --force
+
+    - name: clean all images
+      when: reset
+      shell: docker image prune --force
+
+- name: Run the compose app
+  shell: docker compose -f /app/compose.yml --env-file /app/.env up -d --build
+
+- name: Setup a CRON task to restart the compose app after a reboot
+  become: yes
+  become_user: root
+  cron:
+    name: "Restart the the compose app"
+    special_time: reboot
+    job: "/app/reboot.sh"

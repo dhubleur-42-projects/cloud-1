@@ -1,0 +1,49 @@
+- name: Uninstall old versions of docker
+  become: yes
+  become_user: root
+  apt:
+    name:
+      - docker
+      - docker-engine
+      - docker.io
+      - containerd
+      - runc
+    state: absent
+    update_cache: yes
+
+- name: Prepare APT to add docker repo key
+  become: yes
+  become_user: root
+  apt:
+    name:
+      - ca-certificates
+      - curl
+      - gnupg
+    state: latest
+    update_cache: yes
+
+- name: Copy script to add docker repo key
+  become: yes
+  become_user: root
+  copy:
+    src: "{{ role_path }}/files/add_docker_repo.sh"
+    dest: "/tmp/add_docker_repo.sh"
+    mode: 0755
+
+- name: Add docker repo key (run add_docker_repo.sh)
+  become: yes
+  become_user: root
+  shell: /tmp/add_docker_repo.sh
+
+- name: Install docker
+  become: yes
+  become_user: root
+  apt:
+    name:
+      - docker-ce
+      - docker-ce-cli
+      - containerd.io
+      - docker-buildx-plugin
+      - docker-compose-plugin
+    state: latest
+    update_cache: yes
